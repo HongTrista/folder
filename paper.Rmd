@@ -10,43 +10,72 @@ abstract: null
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
 bibliography: references.bib
 ---
-#pacakges and setup
+
 ```{r setup, include=FALSE}
+#Import packages 
 knitr::opts_chunk$set(echo = TRUE)
 chooseCRANmirror(graphics=FALSE, ind=1)
-library(readr)
 install.packages("ggplot2")
 library(ggplot2)
 install.packages("bookdown")
 library(bookdown)
+install.packages("kableExtra")
+library(kableExtra)
+install.packages("dplyr")
+library(dplyr)
 ```
-#import dataset
+
 
 ```{r,echo=FALSE,include=FALSE}
+#Import cleaned dataset
+library(readr)
 raw_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/raw_dataset.csv"))
 ```
 
 
 
-# Introduction
+## Introduction
+The paper aims to investigate people's attitudes towards city polls. According to Wikipedia's definition, we know that an opinion poll is a type of human research survey to grab people's views regarding a particular topic. The interviewers who have been trained will ask questions to people chosen randomly from the population being measured. The answers will be interpreted and help to make a final decision on the application being applied.
 
+According to the article published by Gallup, we know the importance of poll. The main benefit of doing a poll is to help regular people be heard. The article pointed out that polls can help us know the proportion of a population with a specific viewpoint. Meanwhile, polls are a kind of measurement tool that can explain how a population thinks and feels about any given topic. This can help different cultures understand one another because it gives the people a chance to speak for themselves instead of letting only vocal media stars speak on behalf of all. Because we know the polls are important for the city, I want to know what kind of application most people care about and the pass rate. Moreover, from 2015 to 2019, does people's engagement rate for polls have been improved or not.
 
+For the rest of my paper, I will describe the dataset I used to analyze in the "Data" section. The content includes the descriptions of each variable, the source of the data set, and the data set's size. The findings of my analysis and the graphs and tables used to illustrate my results will be displayed in the section. The "Reference" section will contain all the citation information.
 
 #Data
 Our data is of applications(Figure \@ref(fig:Figure1))
-```{r Figure1,fig.cap="Type of Applications",echo=FALSE}
+```{r Figure1,fig.cap="Type of Applications",echo=FALSE,warning=FALSE,fig.align='center'}
 ggplot(raw_data)+
   geom_bar(aes(x=Type),fill='Orange')+
-  theme_minimal()+
-  coord_flip()
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
-\@ref(fig:Figure_2)
-```{r Figure_2,fig.cap="Typf of Application with final result",echo=FALSE}
+PLZ see the second figure (Figure \@ref(fig:Figure_2))
+```{r Figure_2,fig.cap="Typf of Application with final result",echo=FALSE,warning=FALSE}
 ggplot(raw_data, aes(Type, fill =Result)) + 
   geom_bar()+
-  coord_flip()
+  theme(axis.text.x = element_text(angle = 90))
+
 ```
+
+
+
+The table showed below (Table \@ref(tab:table1))
+```{r table1,warning=FALSE}
+
+table1<-raw_data%>%
+  group_by(Type)%>%
+  summarize(
+    Mean=round(mean(Engagement_rate),3),
+    Std_dev=round(sd(Engagement_rate),3)
+  )%>%
+  arrange(desc(Mean))
+
+table1 %>% 
+  knitr::kable(caption = "The engagment rate for each type of application")
+
+```
+
+
 
 
 

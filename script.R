@@ -15,7 +15,7 @@ library(tidyverse)
 
 
 
-# Read in the raw data. 
+# Read in the raw data:
 raw_data<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc3510309')%>%
   filter(tolower(format) %in% c('csv'))%>%
   filter(row_number()==1)%>%
@@ -23,18 +23,18 @@ raw_data<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc3510309')%>%
 
 
 
-#Clean Existing Data
+#Select interested column:
 raw_data<-raw_data %>%
-  select(BALLOTS_BLANK,BALLOTS_CAST,BALLOTS_IN_FAVOUR,BALLOTS_OPPOSED,BALLOTS_RECEIVED_BY_VOTERS,BALLOTS_RETURNED_TO_SENDER,APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT)%>%
-  rename(Blank=BALLOTS_BLANK,
-         Cast=BALLOTS_CAST,
-         Favour=BALLOTS_IN_FAVOUR,
-         Opposed=BALLOTS_OPPOSED,
-         Received_by_voters=BALLOTS_RECEIVED_BY_VOTERS,
-         Fail_delivered=BALLOTS_RETURNED_TO_SENDER,
-         Type=APPLICATION_FOR,
+  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS)%>%
+  rename(Type=APPLICATION_FOR,
          Result=RESPONSE_RATE_MET,
-         Total_number=FINAL_VOTER_COUNT)
+         Real_total_number=FINAL_VOTER_COUNT,
+         Potential_total_number=POTENTIAL_VOTERS)
+
+
+#Create a new column, engagement rate for each type of application:
+raw_data<-raw_data%>%
+  mutate(Engagement_rate=round((Real_total_number/Potential_total_number),3))
 
 
 #Save the new data as csv document in input/data
