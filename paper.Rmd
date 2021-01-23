@@ -1,0 +1,54 @@
+---
+title: The type of traffic calming safety zone has the best poll engagement by least
+  application number
+author: "Hong Pan"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  bookdown::pdf_document2:
+  toc: yes
+abstract: null
+thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
+bibliography: references.bib
+---
+#pacakges and setup
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+chooseCRANmirror(graphics=FALSE, ind=1)
+library(readr)
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("bookdown")
+library(bookdown)
+```
+#import dataset
+
+```{r,echo=FALSE,include=FALSE}
+raw_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/raw_dataset.csv"))
+```
+
+
+
+# Introduction
+
+
+
+#Data
+Our data is of applications(Figure \@ref(fig:Figure1))
+```{r Figure1,fig.cap="Type of Applications",echo=FALSE}
+ggplot(raw_data)+
+  geom_bar(aes(x=Type),fill='Orange')+
+  theme_minimal()+
+  coord_flip()
+```
+
+\@ref(fig:Figure_2)
+```{r Figure_2,fig.cap="Typf of Application with final result",echo=FALSE}
+ggplot(raw_data, aes(Type, fill =Result)) + 
+  geom_bar()+
+  coord_flip()
+```
+
+
+
+#References
+@R
