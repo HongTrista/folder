@@ -3,21 +3,22 @@ title: The type of traffic calming safety zone has the best poll engagement by l
   application number
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+header-includes: #allows you to add in your own Latex packages
+- \usepackage{float} #use the 'float' package
+- \floatplacement{figure}{H} #make every figure with caption = h
 output:
   bookdown::pdf_document2:
+  fig_cap: yes
+  keep_tex: yes
   toc: yes
-  includes:
-    in_header:my_header.tex
-    
 abstract: null
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
-bibliography: output/paper/references.bib
+
 ---
-
 ```{r setup, include=FALSE}
-
+knitr::opts_chunk$set(echo = TRUE, fig.pos= "h")
 #Import packages 
-knitr::opts_chunk$set(echo = TRUE)
+
 chooseCRANmirror(graphics=FALSE, ind=1)
 
 install.packages("ggplot2")
@@ -52,6 +53,8 @@ For the rest of my paper, I will describe the dataset I used to analyze in the "
 
 
 
+
+
 # Data
 
 ## Dataset
@@ -65,7 +68,7 @@ The purpose of the paper is to investigate changes in people's attitudes towards
 From the bar chart (Figure \@ref(fig:figure1)), we can see that the applications for front yard parking are the most among all application categories. From this we can speculate that more people have more objections to the current rules for parking in the front yard. 
 
 
-```{r figure1,fig.cap="The total number of applications of each type",echo=FALSE,warning=FALSE}
+```{r figure1,fig.cap="The total number of applications of each type",echo=FALSE,warning=FALSE,fig.height = 3, fig.width = 5}
 
 ggplot(new_data,aes(x=Type,fill=Type))+
   geom_bar(aes(y=..count..))+
@@ -73,6 +76,7 @@ ggplot(new_data,aes(x=Type,fill=Type))+
 
 
 ```
+
 
 
 
@@ -85,101 +89,3 @@ ggplot(new_data, aes(Type, fill =Result)) +
   theme(axis.text.x = element_text(angle = 90))
 
 ```
-The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the engagement rate trend, which is how many people actually responded to the polls. Because according to each application, there will be a list of people selected to participate in the public polls, but some people will choose not to participate for personal reasons. I want to indirectly understand people's attitudes towards the public polls by knowing the engagement rate.
-
-
-The line chart (Figure \@ref(fig:Figure3)) shows that the engagement rate generally fluctuated between 0.79 to 0.85 from 2015 to 2020. The relatively high engagement rate shows that people actively participated in the public polls in the past six years. We can also see that the figure shows that the average engagement rate from 2017 to 2019 has shown a clear upward trend, but there has been a turning point in 2019. After 2019, the graph shows a sharp downward trend. I speculate that the main reason for the sharp decline may not be a sudden change in people's attitudes, but the covid-19 has reduced the average engagement rate. Specific reasons require more information and data.
-
-```{r Figure3,fig.cap="Average engagement rate in each year",echo=FALSE,warning=FALSE}
-
-#create a new column, Date_year, which only includes the value of the year.
-new_data$Date_year<-format(new_data$Date,format("%Y"))
-
-# Create a new table helped for drawing the line chart. The table is about the average engagement rate for each year.
-table_tmp<-new_data%>%
-  group_by(Date_year)%>%
-  summarize(
-    Mean=round(mean(Engagement_rate),3),)
-
-#Draw the line chart
-
-ggplot(data=table_tmp,aes(x=Date_year,y=Mean,group=1))+
-  geom_line(color='red')+
-  geom_point()+
-  ggtitle('The average engagement rate from 2015 to 2020')+
-  ylab('Average engagement rate')+
-  xlab('Year')
-
-
-```
-
-
-The table (Table \@ref(tab:table1)) shown below illustrates the average engagement rate for each type of application. The table displays that Parking Permit has the highest average engagement rate, which means when people received the public polls about Parking Permit, most people would choose to participate. Business Improvement Area has the lowest average engagement rate, representing that most people are not interested in this topic.
-
-
-
-```{r table1,warning=FALSE,echo=FALSE}
-
-table1<-new_data%>%
-  group_by(Type)%>%
-  summarize(
-    Average_engagement_rate=round(mean(Engagement_rate),3),
-    Std_dev=round(sd(Engagement_rate),3)
-  )%>%
-  arrange(desc(Average_engagement_rate))%>%
-  rename(Type_of_application=Type)
-
-table1 %>% 
-  knitr::kable(caption = "The average engagment rate for each type of application")
-
-```
-## Limitations of the data set
-
-
-
-
-
-
-
-
-
-# References
-
-@Cite_R
-
-@Cite_Dataset
-
-@Cite_ggplot2
-
-@Cite_Wikipedia
-
-@Cite_gallup
-
-@Cite_readr
-
-@Cite_tidyverse
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

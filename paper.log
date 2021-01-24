@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.1.23)  24 JAN 2021 17:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.1.23)  24 JAN 2021 18:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -522,12 +522,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 118--120
  []
 
 [2] [3 <./paper_files/figure-latex/figure1-1.pdf>]
-<paper_files/figure-latex/Figure3-1.pdf, id=76, 459.7175pt x 315.1775pt>
+<paper_files/figure-latex/Figure3-1.pdf, id=76, 463.7325pt x 313.17pt>
 File: paper_files/figure-latex/Figure3-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/Figure3-1.pdf>
 Package pdftex.def Info: paper_files/figure-latex/Figure3-1.pdf  used on input 
 line 125.
-(pdftex.def)             Requested size: 459.74442pt x 315.19595pt.
+(pdftex.def)             Requested size: 463.73842pt x 313.174pt.
 [4 <./paper_files/figure-latex/Figure2-1.pdf>] [5 <./paper_files/figure-latex/F
 igure3-1.pdf>] [6] (./paper.aux)
 
@@ -537,9 +537,9 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: 746082E1957765D4FE84256883E09471;647.
  ) 
 Here is how much of TeX's memory you used:
- 11007 strings out of 481252
- 157138 string characters out of 5914732
- 453293 words of memory out of 5000000
+ 11009 strings out of 481252
+ 157166 string characters out of 5914732
+ 453301 words of memory out of 5000000
  27716 multiletter control sequences out of 15000+600000
  469727 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -556,10 +556,10 @@ texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/trista/Library/TinyTeX/texmf
 /type1/public/lm/lmr8.pfb></Users/trista/Library/TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmr9.pfb></Users/trista/Library/TinyTeX/texmf-dist/fonts/type1/publi
 c/lm/lmri10.pfb>
-Output written on paper.pdf (6 pages, 247046 bytes).
+Output written on paper.pdf (6 pages, 248914 bytes).
 PDF statistics:
- 167 PDF objects out of 1000 (max. 8388607)
- 138 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
+ 172 PDF objects out of 1000 (max. 8388607)
+ 143 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
  64 words of extra memory for PDF output out of 10000 (max. 10000000)
 
