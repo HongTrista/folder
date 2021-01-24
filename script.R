@@ -25,11 +25,28 @@ raw_data<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc3510309')%>%
 
 #Select interested column:
 raw_data<-raw_data %>%
-  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS)%>%
-  rename(Type=APPLICATION_FOR,
+  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS,OPEN_DATE)%>%
+  rename(Date=OPEN_DATE,
+         Type=APPLICATION_FOR,
          Result=RESPONSE_RATE_MET,
          Real_total_number=FINAL_VOTER_COUNT,
          Potential_total_number=POTENTIAL_VOTERS)
+
+
+#After exploring the dataset, I found some types of application can be changed the name with other types. 
+# 1.The type of Appeal-Front Yard Parking is the same with the type of Front Yard Parking. 
+
+raw_data$Type[raw_data$Type=='Appeal - Front Yard Parking']<-"Front Yard Parking"
+
+# 2. The type of Business Improvement Area is the same type of the Proposed Business Improvement Area. 
+raw_data$Type[raw_data$Type=='Proposed Business Improvement Area']<-"	Business Improvement Area"
+
+#The type of Traffic Calming is the same type with Traffic Calming-Island and Traffic Calming Safety Zone, they are all about the type of traffic calming.
+
+raw_data$Type[raw_data$Type=='Traffic Calming – Island' | raw_data$Type=='Traffic Calming Safety Zone']<-"Traffic Calming"
+
+
+
 
 
 #Create a new column, engagement rate for each type of application:

@@ -5,7 +5,7 @@ author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   bookdown::pdf_document2:
-  toc: no
+  toc: yes
 abstract: null
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
 bibliography: output/paper/references.bib
@@ -15,19 +15,26 @@ bibliography: output/paper/references.bib
 #Import packages 
 knitr::opts_chunk$set(echo = TRUE)
 chooseCRANmirror(graphics=FALSE, ind=1)
+
 install.packages("ggplot2")
+library(ggplot2)
+
+install.packages("tidyverse")
+library(tidyverse)
+
+install.packages("readr")
+library(readr)
 ```
 
 
 ```{r,echo=FALSE,include=FALSE}
 #Import cleaned dataset
-library(readr)
 new_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/raw_dataset.csv"))
 ```
 
 
 
-## Introduction
+# Introduction
 
 The paper aims to investigate people's attitudes towards city polls. According to Wikipedia's definition [@Cite_Wikipedia], we know that an opinion poll is a type of human research survey to grab people's views regarding a particular topic. The interviewers who have been trained will ask questions to people chosen randomly from the population being measured. The answers will be interpreted and help to make a final decision on the application being applied.
 
@@ -37,35 +44,70 @@ For the rest of my paper, I will describe the dataset I used to analyze in the "
 
 
 
-## Data
+# Data
 
+## Dataset
 The dataset, polls conducted by the City I used for analysis in the paper is from the City of Toronto Open Data Portal. The dataset was created for getting the opinions of residents or businesses on different types of topics covered by a City by-law. The methodology of the data being collected is that when an application is submitted, people in the affected area will be given a poll conducted by the City by mail. Only the application that meets benchmarks determined by specific by-law or city policy will be assigned for positive, and City Council will approve the result. The raw dataset contains 25 variables with around 1000 records and some missing values in a specific column. The labelled columns include the type of application, number of blank ballots, number of ballots returned, number of ballots returned by Canada Post as not delivered, the date the poll is open to the public, so on so forth.
 
 The purpose of the paper is to investigate changes in people's attitudes towards polls and the types of applications. The columns I interested in being selected created as a new dataset, which will be listed as followed: the type of application, the date the poll is open to the public, the final result of each application, the number of total voters on the final poll list and the number of people residing within poll boundary range. I also created a new column named engagement rate, which is used to calculate by using the number of a total voter on the final poll list divided by the number of people residing within the poll boundary range. The new dataset used for the analysis has 6 variables with around 1000 records and without missing or null values.
 
 
+## Results
+
+From the bar chart (Figure \@ref(fig:figure1)), we can see that the applications for front yard parking are the most among all application categories. From this we can speculate that more people have more objections to the current rules for parking in the front yard. 
 
 
+```{r figure1,fig.cap="The total number of applications of each type",echo=FALSE,warning=FALSE}
 
-Our data is of applications(Figure \@ref(fig:Figure1))
-```{r Figure1,fig.cap="Type of Applications",echo=FALSE,warning=FALSE}
-ggplot(new_data)+
-  geom_bar(aes(x=Type),fill='Orange')+
+ggplot(new_data,aes(x=Type,fill=Type))+
+  geom_bar(aes(y=..count..))+
   theme(axis.text.x = element_text(angle = 90))
+
+
 ```
 
-PLZ see the second figure (Figure \@ref(fig:Figure_2))
-```{r Figure2,fig.cap="Typf of Application with final result",echo=FALSE,warning=FALSE,fig.align='center'}
+
+
+Figure 2 (Figure \@ref(fig:Figure2)) shows the following, and we can get detailed information about the results of each application. The histogram shows how many applications were finally approved by the City. If the result is positive, the application is marked as "Yes"; otherwise, it is marked as No. In the figure, we can obviously see that Traffic Calming has the largest proportion of No among all types of applications, around 50%. The second type with a high fail rate is Boulevard Cafe, around 30%. For the Front Yard Parking, which is the most popular application type among all types, we can see the pass rate for this type is very high.
+
+
+```{r Figure2,fig.cap="Type of Application with final result",echo=FALSE,warning=FALSE}
 ggplot(new_data, aes(Type, fill =Result)) + 
   geom_bar()+
   theme(axis.text.x = element_text(angle = 90))
 
 ```
+The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the engagement rate trend, which is how many people actually responded to the polls. Because according to each application, there will be a list of people selected to participate in the public polls, but some people will choose not to participate for personal reasons. I want to indirectly understand people's attitudes towards the public polls by knowing the engagement rate.
+
+
+The line chart (Figure \@ref(fig:Figure3)) shows that the engagement rate generally fluctuated between 0.79 to 0.85 from 2015 to 2020. The relatively high engagement rate shows that people actively participated in the public polls in the past six years. We can also see that the figure shows that the average engagement rate from 2017 to 2019 has shown a clear upward trend, but there has been a turning point in 2019. After 2019, the graph shows a sharp downward trend. I speculate that the main reason for the sharp decline may not be a sudden change in people's attitudes, but the covid-19 has reduced the average engagement rate. Specific reasons require more information and data.
+
+```{r Figure3,fig.cap="Average engagement rate in each year",echo=FALSE,warning=FALSE}
+
+#create a new column, Date_year, which only includes the value of the year.
+new_data$Date_year<-format(new_data$Date,format("%Y"))
+
+# Create a new table helped for drawing the line chart. The table is about the average engagement rate for each year.
+table_tmp<-new_data%>%
+  group_by(Date_year)%>%
+  summarize(
+    Mean=round(mean(Engagement_rate),3),)
+
+#Draw the line chart
+
+ggplot(data=table_tmp,aes(x=Date_year,y=Mean,group=1))+
+  geom_line(color='red')+
+  geom_point()
+
+
+```
+
+
+The table (Table \@ref(tab:table1)) shown below illustrates the average engagement rate for each type of application. The table displays that Parking Permit has the highest average engagement rate, which means when people received the public polls about Parking Permit, most people would choose to participate. Business Improvement Area has the lowest average engagement rate, representing that most people are not interested in this topic.
 
 
 
-The table showed below (Table \@ref(tab:table1))
-```{r table1,warning=FALSE}
+```{r table1,warning=FALSE,echo=FALSE}
 
 table1<-new_data%>%
   group_by(Type)%>%
@@ -79,10 +121,53 @@ table1 %>%
   knitr::kable(caption = "The engagment rate for each type of application")
 
 ```
+## Limitations of the data set
 
 
 
 
 
-#References
-@R
+
+
+
+
+# References
+
+@Cite_R
+
+@Cite_Dataset
+
+@Cite_ggplot2
+
+@Cite_Wikipedia
+
+@Cite_gallup
+
+@Cite_readr
+
+@Cite_tidyverse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
