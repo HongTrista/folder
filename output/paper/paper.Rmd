@@ -3,21 +3,29 @@ title: The type of traffic calming safety zone has the best poll engagement by l
   application number
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+
 output:
   bookdown::pdf_document2:
   toc: yes
+  fig_cap: yes
+  keep_tex: yes
   includes:
     in_header:my_header.tex
     
 abstract: null
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
 bibliography: output/paper/references.bib
+
+header-includes:
+ - \usepackage{float}
+ - \floatplacement{figure}{H}
+ 
+ 
 ---
 
 ```{r setup, include=FALSE}
-
 #Import packages 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.pos= "h",warning=FALSE)
 chooseCRANmirror(graphics=FALSE, ind=1)
 
 install.packages("ggplot2")
@@ -30,12 +38,10 @@ install.packages("readr")
 library(readr)
 
 
-install.packages("float")
-library(float)
 ```
 
 
-```{r,echo=FALSE,include=FALSE}
+```{r,include=FALSE}
 #Import cleaned dataset
 new_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/raw_dataset.csv"))
 ```
@@ -65,21 +71,22 @@ The purpose of the paper is to investigate changes in people's attitudes towards
 From the bar chart (Figure \@ref(fig:figure1)), we can see that the applications for front yard parking are the most among all application categories. From this we can speculate that more people have more objections to the current rules for parking in the front yard. 
 
 
-```{r figure1,fig.cap="The total number of applications of each type",echo=FALSE,warning=FALSE}
+```{r figure1,fig.cap="The total number of applications of each type",fig.height = 3, fig.width = 8,echo=FALSE}
 
 ggplot(new_data,aes(x=Type,fill=Type))+
   geom_bar(aes(y=..count..))+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90))+
+  coord_flip()
 
 
 ```
 
 
 
-Figure 2 (Figure \@ref(fig:Figure2)) shows the following, and we can get detailed information about the results of each application. The histogram shows how many applications were finally approved by the City. If the result is positive, the application is marked as "Yes"; otherwise, it is marked as No. In the figure, we can obviously see that Traffic Calming has the largest proportion of No among all types of applications, around 50%. The second type with a high fail rate is Boulevard Cafe, around 30%. For the Front Yard Parking, which is the most popular application type among all types, we can see the pass rate for this type is very high.
+Figure 2 (Figure \@ref(fig:figure2)) shows the following, and we can get detailed information about the results of each application. The histogram shows how many applications were finally approved by the City. If the result is positive, the application is marked as "Yes"; otherwise, it is marked as No. In the figure, we can obviously see that Traffic Calming has the largest proportion of No among all types of applications, around 50%. The second type with a high fail rate is Boulevard Cafe, around 30%. For the Front Yard Parking, which is the most popular application type among all types, we can see the pass rate for this type is very high.
 
 
-```{r Figure2,fig.cap="Type of Application with final result",echo=FALSE,warning=FALSE}
+```{r figure2,fig.cap="Type of Application with final result",echo=FALSE}
 ggplot(new_data, aes(Type, fill =Result)) + 
   geom_bar()+
   theme(axis.text.x = element_text(angle = 90))
@@ -90,7 +97,7 @@ The time range for the data in the dataset is from 2015 to 2020 last day. To kno
 
 The line chart (Figure \@ref(fig:Figure3)) shows that the engagement rate generally fluctuated between 0.79 to 0.85 from 2015 to 2020. The relatively high engagement rate shows that people actively participated in the public polls in the past six years. We can also see that the figure shows that the average engagement rate from 2017 to 2019 has shown a clear upward trend, but there has been a turning point in 2019. After 2019, the graph shows a sharp downward trend. I speculate that the main reason for the sharp decline may not be a sudden change in people's attitudes, but the covid-19 has reduced the average engagement rate. Specific reasons require more information and data.
 
-```{r Figure3,fig.cap="Average engagement rate in each year",echo=FALSE,warning=FALSE}
+```{r Figure3,fig.cap="Average engagement rate in each year",echo=FALSE}
 
 #create a new column, Date_year, which only includes the value of the year.
 new_data$Date_year<-format(new_data$Date,format("%Y"))
@@ -118,7 +125,7 @@ The table (Table \@ref(tab:table1)) shown below illustrates the average engageme
 
 
 
-```{r table1,warning=FALSE,echo=FALSE}
+```{r table1,echo=FALSE}
 
 table1<-new_data%>%
   group_by(Type)%>%
