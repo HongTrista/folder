@@ -26,7 +26,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 #install all packages 
-knitr::opts_chunk$set(echo = TRUE, fig.pos= "h",warning=FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.pos= "h")
 chooseCRANmirror(graphics=FALSE, ind=1)
 
 install.packages("ggplot2")
