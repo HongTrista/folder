@@ -47,12 +47,6 @@ raw_data$Type[raw_data$Type=='Traffic Calming – Island' | raw_data$Type=='Traf
 
 
 
-
-#Create a new column, engagement rate, for each type of application:
-raw_data<-raw_data%>%
-  mutate(Engagement_rate=round((Real_total_number/Potential_total_number),3))
-
-
 #Save the new data as csv document in input/data
 write_csv(raw_data,"input/raw_dataset.csv")
 
