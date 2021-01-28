@@ -12,43 +12,50 @@
 library(opendatatoronto)
 library(tidyverse)
 
-
-
-# Read in the raw data from Open Data Toronto:
-raw_data<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc3510309')%>%
+# Read in the raw data from Open Data Toronto Portal:
+raw_data_without_cleaning<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc3510309')%>%
   filter(tolower(format) %in% c('csv'))%>%
   filter(row_number()==1)%>%
   get_resource()
 
 
+# To save the raw data without cleaning as a csv document in the input folder, input/data.
+write_csv(raw_data,"input/raw_dataset_without_cleaning.csv")
 
-#Select interested column:
-raw_data<-raw_data %>%
-  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS,OPEN_DATE)%>%
+
+
+#Select columns of interest and rename them:
+clean_data<-raw_data_without_cleaning %>%
+  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS,OPEN_DATE,POLL_RESULT)%>%
   rename(Date=OPEN_DATE,
-         Type=APPLICATION_FOR,
-         Result=RESPONSE_RATE_MET,
+         Application_topic=APPLICATION_FOR,
+         Result_rate=RESPONSE_RATE_MET,
+         Final_result=POLL_RESULT,
          Real_total_number=FINAL_VOTER_COUNT,
          Potential_total_number=POTENTIAL_VOTERS)
 
 
-#After exploring the dataset, I found some types of application can be changed the name with other types. 
-# 1.The type of Appeal-Front Yard Parking is the same with the type of Front Yard Parking. 
 
-raw_data$Type[raw_data$Type=='Appeal - Front Yard Parking']<-"Front Yard Parking"
+## Clean Data##
 
-# 2. The type of Business Improvement Area is the same type of the Proposed Business Improvement Area. 
-raw_data$Type[raw_data$Type=='Proposed Business Improvement Area']<-"	Business Improvement Area"
+#After exploring the raw dataset, I found that some application topics belong to branch, I changed the names to the main category.:
 
-#The type of Traffic Calming is the same type with Traffic Calming-Island and Traffic Calming Safety Zone, they are all about the type of traffic calming.
+# 1.The topic,Appeal-Front Yard Parking, belongs to the topic of Front Yard Parking. 
 
-raw_data$Type[raw_data$Type=='Traffic Calming – Island' | raw_data$Type=='Traffic Calming Safety Zone']<-"Traffic Calming"
+clean_data$Application_topic[clean_data$Application_topic=='Appeal - Front Yard Parking']<-"Front Yard Parking"
 
-
+# 2. The topic, Proposed Business Improvement Area, belongs to the topic of Business Improvement Area. 
+clean_data$Application_topic[clean_data$Application_topic=='Proposed Business Improvement Area']<-"	Business Improvement Area"
 
 
-#Save the new data as csv document in input/data
-write_csv(raw_data,"input/raw_dataset.csv")
+# 3.The topics,Traffic Calming-Island and Traffic Calming Safety Zone, belong to the topic of Traffic Calming. 
+clean_data$Application_topic[clean_data$Application_topic=='Traffic Calming – Island' | clean_data$Application_topic=='Traffic Calming Safety Zone']<-"Traffic Calming"
+
+
+
+
+#Save the cleaned data as csv document in input/data
+write_csv(clean_data,"input/raw_dataset.csv")
 
 
 
