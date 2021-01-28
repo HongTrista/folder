@@ -55,7 +55,7 @@ clean_data$Application_topic[clean_data$Application_topic=='Traffic Calming – 
 
 
 #Save the cleaned data as csv document in input/data
-write_csv(clean_data,"input/raw_dataset.csv")
+write_csv(clean_data,"input/clean_data.csv")
 
 
 
