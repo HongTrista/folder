@@ -20,16 +20,16 @@ raw_data_without_cleaning<-list_package_resources('7bce9bf4-be5c-4261-af01-abfbc
 
 
 # To save the raw data without cleaning as a csv document in the input folder, input/data.
-write_csv(raw_data,"input/raw_dataset_without_cleaning.csv")
+write_csv(raw_data_without_cleaning,"input/raw_dataset_without_cleaning.csv")
 
 
 
 #Select columns of interest and rename them:
 clean_data<-raw_data_without_cleaning %>%
-  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS,OPEN_DATE,POLL_RESULT)%>%
-  rename(Date=OPEN_DATE,
+  select(APPLICATION_FOR,RESPONSE_RATE_MET,FINAL_VOTER_COUNT,POTENTIAL_VOTERS,CLOSE_DATE,POLL_RESULT)%>%
+  rename(Date=CLOSE_DATE,
          Application_topic=APPLICATION_FOR,
-         Result_rate=RESPONSE_RATE_MET,
+         Response_rate_met=RESPONSE_RATE_MET,
          Final_result=POLL_RESULT,
          Real_total_number=FINAL_VOTER_COUNT,
          Potential_total_number=POTENTIAL_VOTERS)
