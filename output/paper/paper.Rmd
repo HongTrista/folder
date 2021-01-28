@@ -1,5 +1,5 @@
 ---
-title: The rate for people engage public polls increased from 2015 to 2019
+title: The Poll Engagement has Increased but Sharply Declined in 2019.
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 
@@ -9,7 +9,7 @@ bibliography: references.bib
 
 output:
   bookdown::pdf_document2:
-  toc: yes
+  toc: no
   fig_cap: yes
   keep_tex: yes
   includes:
@@ -29,36 +29,28 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE, fig.pos= "h")
 chooseCRANmirror(graphics=FALSE, ind=1)
 
-install.packages("ggplot2")
+
+install.packages("ggplot2") # for drawing nice figures
 library(ggplot2)
 
-install.packages("tidyverse")
+install.packages("tidyverse") # for filtering data
 library(tidyverse)
 
-install.packages("readr")
+install.packages("readr") # for read the dataset
 library(readr)
 
-install.packages("bookdown")
+install.packages("bookdown") # for cross referencing figures and tables
 library(bookdown)
 
 ```
 
 
-```{r,include=FALSE}
-#Import cleaned dataset
-new_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/raw_dataset.csv"))
-
-#Create a new column, engagement rate.
-new_data<-new_data%>%
-  mutate(Engagement_rate=round((Real_total_number/Potential_total_number),3))
-```
-
-
-
 # Introduction
 
-Public polls belong to human research survey to help us know how a population thinks about any given specific topic. The trained interviewers will ask questions to people chosen randomly from the population being measured. The interviewees' answers will be interpreted and help to make a final decision on the application applied.[@Cite_Wikipedia] The main benefit for people from the public polls is that it gives regular people a chance to be heard instead of letting only media stars speak on behalf of all.[@Cite_gallup]
+Low poll engagement may cause non-response bias, which would misunderstanding the real feeling and thinking of people.[@Cite_Surveys] Public polls belong to human research surveys to help us know how a population thinks about any specific topic. The trained interviewers will ask questions to people chosen randomly from the population being measured. The interviewees' answers will be interpreted and help to make a final decision on the application applied.[@Cite_Wikipedia] The main benefit for people from the public polls is that it gives regular people a chance to be heard instead of letting only media stars speak on behalf of all.[@Cite_gallup]
 
+
+# need to edit
 After knowing the definition and importance of public polls, I want to look at how people's positively toward public polls by creating a variable called engagement rate in this paper. I construct a line chart to show the average engagement rate changes from 2015 to 2020. The graph shows that the engagement rate slightly rises from 2015 to 2019, but a sharp decrease from 2019 to 2020. Then, I create a table to illustrate the average engagement rate for each type of application,  and I find that Permit Parking has the highest average engagement rate. To know more information in detail, I draw two histograms to display how many applicants for each type and the number of results, whether the application has passed. The graphs show that most people have a problem with Front Yard Parking, but it has the highest pass rate.
 
 The remainder of the paper is structured as follows: Section 2 discusses the variables in the data set, Section 3 presents the figures and tables with their explanations,and finally Section 4 provides all the references.
@@ -66,17 +58,23 @@ The remainder of the paper is structured as follows: Section 2 discusses the var
 
 # Data
 
-## Dataset
+The analysis for this paper done using R [@Cite_R]and several packages, which listed as followed: 'ggplot2' helps to visualize the data in figures[Cite_ggplot2], 'tidyverse' used for data manipulation[@Cite_tidyverse], 'readr' used for import data set from URL by R[@Cite_readr], and 'bookdown' used for cross-referencing figures and tables[@Cite_bookdown.  The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal, which is free to the public and start to collect the data from April 1, 2015.[@Cite_Dataset] 
 
-The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal.[@Cite_Dataset] The purpose of the data set is to get people's opinions on different types of topics covered by a City by-law. When an application is submitted, the organization will randomly mail the poll to people who live in the affected area. The result, whether the application pass or not, showed in the data set. 
+```{r,include=FALSE}
+#Import cleaned dataset
+clean_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/clean_data.csv"))
 
-The raw data set contains 25 variables with around 1000 records and some missing values in one specific column. The labeled columns in the raw dataset include the type of topic, number of blank ballots received, number of ballots returned, number of ballots fail delivered, the date the poll is open to the public, etc.
-
-The main purpose of the paper is to investigate people's attitudes towards polls and the types of topics. The columns I interested in selected from the raw dataset and created as a new dataset, which will be listed as followed: the type of application, the date the poll is open to the public, the final result of each application, the total number of voters on the final poll list and the number of residents within the boundaries of the poll. To analyze people's positivity about the poll, I created a new column named engagement rate, which calculates the real number of people participating in the poll divided by the potential number of people who should participate in the poll. The final new data set used for the analysis in the paper includes 6 variables with around 1000 observations and without missing or null values.
-
-
-## Results
-
+#Create a new column, engagement rate.
+clean_data<-clean_data%>%
+  mutate(Engagement_rate=round((Real_total_number/Potential_total_number),3))
+```
+From the description of the dataset, we know that the data in the dataset will be updated upon the closing and certification of each poll. The data set after cleaning contains 6 variables with around 1000 conversations and no missing values. The explanations of each variable will be shown in the following:
+    - Application_topic: Type of each application, which is a categorical variable.
+    - Response_rate_met: Whether the number of ballots returned has met the required response rate, a categorical variable with values 'YES' and 'NO.'
+    - Real_total_number: The number of total voters on the final poll list, which is a numerical variable.
+    - Potential_total_number: The number of people residing within the poll boundary range, which is a numerical variable.
+    - Date: The date the poll has been closed, which is a time categorical variable.
+    - Final_result: The final result of the poll, which is a categorical variable with levels of "In favour', ' opposed,' and ' response rate not met.'
 
 The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the engagement rate trend, which is how many people actually responded to the polls. Because according to each application, there will be a list of people selected to participate in the public polls, but some people will choose not to participate for personal reasons. I want to indirectly understand people's attitudes towards the public polls by knowing the engagement rate.
 
@@ -153,23 +151,6 @@ ggplot(new_data, aes(Type, fill =Result)) +
 
 
 
-# References
-
-@Cite_R
-
-@Cite_Dataset
-
-@Cite_ggplot2
-
-@Cite_Wikipedia
-
-@Cite_gallup
-
-@Cite_readr
-
-@Cite_tidyverse
-
-@Cite_bookdown
 
 
 

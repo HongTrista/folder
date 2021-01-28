@@ -53,6 +53,11 @@ clean_data$Application_topic[clean_data$Application_topic=='Traffic Calming – 
 
 
 
+# Because the data is a daily update, to not confuse people, I only use the data collected before 2020/12/30
+clean_data <-
+  clean_data %>%
+  filter(Date <= as.Date("2020-12-30"))
+
 
 #Save the cleaned data as csv document in input/data
 write_csv(clean_data,"input/clean_data.csv")
