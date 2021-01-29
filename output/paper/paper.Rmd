@@ -1,5 +1,5 @@
 ---
-title: The Poll Engagement has Increased but Sharply Declined in 2019.
+title: High Poll Engagement but sharply Declined in April 2020
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 
@@ -42,6 +42,16 @@ library(readr)
 install.packages("bookdown") # for cross referencing figures and tables
 library(bookdown)
 
+
+install.packages("kableExtra") # for creating table
+library(kableExtra)
+
+install.packages("zoo")# for editing the time variable
+library(zoo)
+
+install.packages("ggpubr")
+library(ggpubr)
+
 ```
 
 
@@ -57,97 +67,145 @@ The remainder of the paper is structured as follows: Section 2 discusses the var
 
 
 # Data
-
-The analysis for this paper done using R [@Cite_R]and several packages, which listed as followed: 'ggplot2' helps to visualize the data in figures[Cite_ggplot2], 'tidyverse' used for data manipulation[@Cite_tidyverse], 'readr' used for import data set from URL by R[@Cite_readr], and 'bookdown' used for cross-referencing figures and tables[@Cite_bookdown.  The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal, which is free to the public and start to collect the data from April 1, 2015.[@Cite_Dataset] 
-
 ```{r,include=FALSE}
 #Import cleaned dataset
 clean_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/main/input/clean_data.csv"))
+```
+The analysis for this paper done using R [@Cite_R]and several packages, which listed as followed: 'ggplot2' helps to visualize the data in figures[Cite_ggplot2], 'tidyverse' used for data manipulation[@Cite_tidyverse], 'readr' used for import data set from URL by R[@Cite_readr], 'bookdown' used for cross-referencing figures and tables[@Cite_bookdown],'kableExtr' used for creating a table [@Cite_kableExtr], and 'lubridate' used to edit the time variable.[@Cite_zoo]  The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal.[@Cite_Dataset] 
 
-#Create a new column, engagement rate.
+The main goal of creating the dataset is to analyze the poll engagement in Toronto. The dataset is free to the public and starts on April 1, 2015. When the City Clerk's Office receives an application, a poll will distribute to all the people who may be influenced in the region mentioned in the application. People have the right to participate in the poll or not, the number of people who do not mail the poll back, the address is wrong, and any information will be recorded in the dataset. Only the application which meets the required response rate will be processed to the next step. The data will be updated after the polls have been closed and after the certification has been made. As we mentioned before, a low response rate may cause non-response bias, which means the real feeling and thinking of a specific event will be misunderstood. For example, the article analysis of health problem with non-response bias pointed out that non-response was determined to contribute to underestimated health risks. The strength of the data set I used in the paper is that it set the minimum response rate for each application, which may prevent non-response bias to some extent.[@Cite_bias]
+
+The data set after cleaning contains 6 variables with 922 conversations and no missing values. The explanations of each variable will be shown in the following:\
+. Application_topic: Type of each application, which is a categorical variable with levels of "Front Yard Parking", "Traffic Calming," "Boulevard Cafe", "Business Improvement Area," and "Commercial Boulevard Parking."\
+. Response_rate_met: Whether the number of ballots returned has met the required response rate, a categorical variable with values 'YES' and 'NO.'\
+. Real_total_number: The number of total voters on the final poll list, which is a numerical variable.\
+. Potential_total_number: The number of people residing within the poll boundary range, which is a numerical variable.\
+. Date: The date of close, a time categorical variable from June 5, 2015, to Dec 30, 2020.\
+. Final_result: The final result of the poll, which is a categorical variable with levels of "In favour', ' opposed,' and ' response rate not met.'\
+
+```{r}
+#Create a new column, response_rate.
 clean_data<-clean_data%>%
-  mutate(Engagement_rate=round((Real_total_number/Potential_total_number),3))
-```
-From the description of the dataset, we know that the data in the dataset will be updated upon the closing and certification of each poll. The data set after cleaning contains 6 variables with around 1000 conversations and no missing values. The explanations of each variable will be shown in the following:
-    - Application_topic: Type of each application, which is a categorical variable.
-    - Response_rate_met: Whether the number of ballots returned has met the required response rate, a categorical variable with values 'YES' and 'NO.'
-    - Real_total_number: The number of total voters on the final poll list, which is a numerical variable.
-    - Potential_total_number: The number of people residing within the poll boundary range, which is a numerical variable.
-    - Date: The date the poll has been closed, which is a time categorical variable.
-    - Final_result: The final result of the poll, which is a categorical variable with levels of "In favour', ' opposed,' and ' response rate not met.'
-
-The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the engagement rate trend, which is how many people actually responded to the polls. Because according to each application, there will be a list of people selected to participate in the public polls, but some people will choose not to participate for personal reasons. I want to indirectly understand people's attitudes towards the public polls by knowing the engagement rate.
-
-
-The line chart (Figure \@ref(fig:Figure1)) shows that the engagement rate generally fluctuated between 0.79 to 0.85 from 2015 to 2020. The relatively high engagement rate shows that people actively participated in the public polls in the past six years. We can also see that the figure shows that the average engagement rate from 2017 to 2019 has shown a clear upward trend, but there has been a turning point in 2019. After 2019, the graph shows a sharp downward trend. I speculate that the main reason for the sharp decline may not be a sudden change in people's attitudes, but the covid-19 has reduced the average engagement rate. Specific reasons require more information and data.
-
-```{r Figure1,fig.cap="Average engagement rate in each year",echo=FALSE,fig.height = 3, fig.width = 8}
-
-#create a new column, Date_year, which only includes the value of the year.
-new_data$Date_year<-format(new_data$Date,format("%Y"))
-
-# Create a new table helped for drawing the line chart. The table is about the average engagement rate for each year.
-table_tmp<-new_data%>%
-  group_by(Date_year)%>%
-  summarize(
-    Mean=round(mean(Engagement_rate),3),)
-
-#Draw the line chart
-
-ggplot(data=table_tmp,aes(x=Date_year,y=Mean,group=1))+
-  geom_line(color='red')+
-  geom_point()+
-  ggtitle('The average engagement rate from 2015 to 2020')+
-  ylab('Average engagement rate')+
-  xlab('Year')
-
-
+  mutate(Response_rate=round((Real_total_number/Potential_total_number),3))
 ```
 
+In order to analyze the real response rate for each application topic, I create a new variable, response_rate, based on the Real_total_number and Potential_total_number variables in the clean dataset.:
+. Response_rate: Real_total_number divided by Potential_total_number
 
-To know more in detail,the table (Table \@ref(tab:table1)) shown below illustrates the average engagement rate for each type of application. The table displays that Parking Permit has the highest average engagement rate, which means when people received the public polls about Parking Permit, most people would choose to participate. Business Improvement Area has the lowest average engagement rate, representing that most people are not interested in this topic.
+
+
+
+Table 1(Table \@ref(tab:table1)) shows the total number of application for each different topic, we can see that from year 2015 to 2020, the number of application about the problem with Front Yard Parking occupied half of the total application number, which is 510 in 922. We can deduce that most people have the problems about the issue of front yard parking. The figure 1(Figure \@ref(fig:Figure1)) illustrate a line chart shows the trend of the total application number from year 2015 to 2020 in each quarter. The line chart shows a downward slope, which means all topics the city organization cares about are gradually getting better because fewer and fewer application numbers are being received. This is a great sign for the city organization.
 
 ```{r table1,echo=FALSE}
-#Create a table to show the mean average engagement rate and sd for each type of application.
-table1<-new_data%>%
-  group_by(Type)%>%
-  summarize(
-    Average_engagement_rate=round(mean(Engagement_rate),3),
-    Std_dev=round(sd(Engagement_rate),3)
-  )%>%
-  arrange(desc(Average_engagement_rate))%>%
-  rename(Type_of_application=Type)
+#Create a table only show the type of topic and the total number of application per topic
+table1<-clean_data%>%
+  group_by(Application_topic)%>%
+  count()
 
-#To add a tital for the table
-table1 %>% 
-  knitr::kable(caption = "The average engagment rate for each type of application")
-
+# Show the table
+table1%>%
+  kable(caption = "Total number of applications per topic",col.names = c("Application_topic","Number"))
 ```
 
-In addition to being interested in the participation rate, I am also interested in which topic people are dissatisfied with the current situation and submitted applications. From the bar chart (Figure \@ref(fig:figure2)), We can see that the number of applications for Front Yard Parking is the most among all application categories. We can speculate that more people have more objections to the current rules for parking in the front yard. 
 
 
-```{r figure2,fig.cap="The total number of applications of each type",fig.height = 3, fig.width = 8,echo=FALSE}
-# Draw bar chart to show total number of application for each type of topic
-ggplot(new_data,aes(x=Type,fill=Type))+
-  geom_bar(aes(y=..count..))+
+```{r Figure1,fig.cap="Total number of application in each quarter",echo=FALSE,fig.height = 3, fig.width = 8}
+#change the date to quarter form
+clean_data<-clean_data%>%
+  mutate(Date_quarter=as.yearqtr(Date, format = "%Y-%m-%d"))
+
+
+
+#plot a figure to show the trend of total application along with time
+ggplot(clean_data, aes(x=Date_quarter)) + 
+  stat_count(geom='line', aes(y=..count..),size=1,color='blue')+
+  ylab("Number of application")
+```
+
+```{r}
+#To avoid messing up the original data set, duplicate the clean_data as tmp_data:
+tmp_data<-clean_data
+
+#create two new column, Date_month and Date_year.
+tmp_data<-clean_data%>%
+  complete(Date = seq.Date(min(Date), max(Date), by="day"))%>%  # create consistent date
+  mutate(Date_month=format(as.Date(Date),"%Y-%m"),              # only includes the value of year and month.
+         Date_year=format(as.Date(Date),"%Y"))                  #only includes the value of the year
+```
+
+The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the response rate trend, how many people actually engaged in the City's polls. Because according to each application, there will be a list of people selected to participate in the public polls, however, some people will refuse to participate. I want to indirectly understand people's attitudes towards the public polls by knowing the response rate.
+
+The line chart (Figure \@ref(fig: Figure2)) shows that the response rate generally fluctuated around 0.8 from 2015 to April 2020. The relatively high engagement rate illustrates that people actively participate in the City's public polls in the past six years. The line sharply declined in April 2020 from 0.88 to 0.5 in October and bounced back to normal in November. As we all known, the covid-19 broke out in March in Toronto, which may be the reason influence the engagement sharply decline in April, and because the response rate quickly returned to normal levels in November. From this, it can be inferred that the drastic decline was not due to changes in people’s attitudes towards polls, but more data is needed to support this conjecture.
+
+```{r Figure2,fig.cap="Average response rate per month",echo=FALSE,warning=FALSE,fig.height = 3, fig.width = 8}
+# Draw the a line chart to show the trend of average response rate each month.
+
+ggplot(data = tmp_data, aes(x = Date_month, y = Response_rate)) + 
+   stat_summary(geom = "line", fun = mean,group=1,color='blue')+
   theme(axis.text.x = element_text(angle = 90))+
-  coord_flip()
+  ylab('Average Response_rate')
 
 
 ```
 
+To know more about data, the graphs about different topics with whether the required response rate has been met or not, and with the final result situation for each topic been analyzed. From the left graph in figure 3(Figure \@ref(fig: Figure3)), Traffic Calming has the highest number of applications that do not meet the required response rate among all types, which is around half of the total applications in Traffic Calming topic. Meanwhile, Front Yard Parking has the highest application number that meets the required response rate, which is around 95% of the total applications on the topic of Front Yard Parking.
 
-Figure  (Figure \@ref(fig:figure3)) shows detailed information about the results of each application. The histogram shows how many applications were finally approved by the City. If the result is positive, the application is marked as "Yes"; otherwise, it is marked as No. In the figure, we can obviously see that Traffic Calming has the largest proportion of No among all types of applications, around 50%. The second type with a high fail rate is Boulevard Cafe, around 30%. For the Front Yard Parking, which is the most popular application type among all types, we can see the pass rate for this type is the highest.
+The applications which do not meet the required response rate will be given the final result of "No", then, the graph about the final result for the applications which meet the required response rate has been plotted on the left in figure 3(Figure \@ref(fig: Figure3)). The graph illustrates that Front Yard Parking has the highest pass rate by showing the highest proportion of result of "in favour," then, followed by Traffic Calming. Combined the information we explored out in table 1(Table \@ref(tab:table1)), which shows that almost half of the applications are about Front Yard Parking, we can infer that although most people have problems with front yard parking, it is the easiest to pass topic.
 
 
-```{r figure3,fig.cap="Type of Application with final result",echo=FALSE}
-#Draw a bar chart to show the total result of each type of topic.
-ggplot(new_data, aes(Type, fill =Result)) + 
+
+```{r Figure3,fig.cap="Combine two graphs to show information in detail",echo=FALSE,warning=FALSE}
+# Create a graph showing the number of application for each topic by different result from whether the application meet the response rate requirement.
+p1<-ggplot(clean_data, aes(x=Application_topic)) + 
+  stat_count(geom='bar', aes(y=..count..),fill='purple')+
+  facet_wrap(~Response_rate_met)+
+  ylab("Number of application")+
+  theme(axis.text.x = element_text(angle = 90))+
+  ggtitle('Topic with response_rate_met')
+
+
+# Create a graph showing the number of application for each topic for application which meets the required response rate.
+
+p2<-clean_data%>%
+  filter(Response_rate_met=="Yes")%>%
+  ggplot(aes(Application_topic, fill =Final_result)) + 
   geom_bar()+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90))+
+  ylab("Application Number")+
+  ggtitle('Topic with final result')
+  
+ggarrange(p1, p2, ncol = 2, nrow = 1)
 
 ```
+
+While the poll engagement behaves great in Toronto, shown by the paper's result. However, the result is not representative due to the limitations of the dataset using for analysis. The first point is that the application volume for each topic is not close to equal. For instance, almost half of the application is about front yard parking, which may cause the result unreliable. Also, the date of collecting data is inconsistent, which may hide the information behind. Finally, the required response rate for each application is different, which will influence the analysis. The information about how to generate the required response rate should be explained.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
