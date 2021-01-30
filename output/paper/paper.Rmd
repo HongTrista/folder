@@ -3,17 +3,14 @@ title: High Poll Engagement but sharply Declined in April 2020
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 
-abstract: The data collected by the city government used for analyzed the poll engagement is used in the paper. Residents' attitudes toward each topic and the changes of engagement rate through time being discussed. The data illustrates that half of the residents have issues with front yard parking and the response rate sharply declined from 0.8 to 0.5 in April 2020. The low response rate may cause non-response bias, which will cause the government to misunderstand the real feeling and thinking of residents.
+abstract: The data used in the paper was collected by the city government used for analyzed the poll engagement. Attitudes from residents toward each topic and the changes of response rate through time being discussed. The descriptive results illustrate that Front Yard Parking has the most issues, and the poll engagement performed poorly in April 2020. Non-response bias may exist with low engagement, which may cause misunderstanding for the government.
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
 bibliography: references.bib
 
 output:
   bookdown::pdf_document2:
   toc: no
-  fig_cap: yes
-  keep_tex: yes
-  includes:
-    in_header:my_header.tex
+
 
 header-includes:
  - \usepackage{float}
@@ -57,11 +54,9 @@ library(ggpubr)
 
 # Introduction
 
-Low poll engagement may cause non-response bias, which would misunderstanding the real feeling and thinking of people.[@Cite_Surveys] Public polls belong to human research surveys to help us know how a population thinks about any specific topic. The trained interviewers will ask questions to people chosen randomly from the population being measured. The interviewees' answers will be interpreted and help to make a final decision on the application applied.[@Cite_Wikipedia] The main benefit for people from the public polls is that it gives regular people a chance to be heard instead of letting only media stars speak on behalf of all.[@Cite_gallup]
+Low poll engagement may cause non-response bias, which would misunderstanding the real feeling and thinking of people.[@Cite_Surveys] Public polls belong to human research surveys to determine how a population thinks about any specific topic. The trained interviewers will ask questions to people chosen randomly from the population being measured. The interviewees' answers will be interpreted and help to make a final decision on the application applied.[@Cite_Wikipedia] The main benefit for people from the public polls is that it gives regular people a chance to be heard instead of letting only media stars speak on behalf of all.[@Cite_gallup]
 
-A poll belongs to a human research survey, which is used to collect opinions from the population by the government. The report first wants to know which topic is the residents have the most problems with. The results show that the total number of applications for front yard parking is the highest among all topics,  and the proportion of the volume of applications that achieve the required response rate is the highest for front yard parking. The circumstance can infer that most people have problems with and focus on front yard parking. Meanwhile, the findings of the final result of each application show that the pass rate for front yard parking also the highest. The time-series graph illustrated a downward trend in both the number of total applications and applications about front yard parking. Combined the findings before, we can see the government is earnestly understanding the opinions of residents and is really helping everyone to solve their problems.
-
-The remainder of the paper is structured as follows: Section 2 discusses the variables in the data set, Section 3 presents the figures and tables with their explanations,and finally Section 4 provides all the references.
+Which of the six topics is the most problematic for residents is the first question to be investigated in this paper. The results show that among all topics, the total number of applications for Front Yard Parking is the highest, and the proportion for the applications that achieve the required response rate account for the highest as well. Secondly, according to the data of the final result of each application, it is found that the final passing rate of the front yard parking is the highest. Furthermore, the time-series graph illustrated a downward trend in the number of total applications and applications about front yard parking. The remainder of the paper is structured as follows: Section 2 discusses the variables in the data set, Section 3 presents the figures and tables with their explanations,and finally Section 4 provides all the references.
 
 
 # Data
@@ -71,15 +66,15 @@ clean_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/ma
 ```
 The analysis for this paper done using R [@Cite_R]and several packages, which listed as followed: 'ggplot2' helps to visualize the data in figures[@Cite_ggplot2], 'tidyverse' used for data manipulation[@Cite_tidyverse], 'readr' used for import data set from URL by R[@Cite_readr], 'bookdown' used for cross-referencing figures and tables[@Cite_bookdown],'ggpubr' used for combining graphs in one figure [@Cite_ggpubr], and 'zoo' used to edit the time variable.[@Cite_zoo]  The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal.[@Dataset] 
 
-The main goal of creating the dataset is to analyze the poll engagement in Toronto. The dataset is free to the public and starts on April 1, 2015. When the City Clerk's Office receives an application, a poll will distribute to all the people who may be influenced in the region mentioned in the application. People have the right to participate in the poll or not, the number of people who do not mail the poll back, the address is wrong, and any information will be recorded in the dataset. Only the application which meets the required response rate will be processed to the next step. The data will be updated after the polls have been closed and after the certification has been made. As we mentioned before, a low response rate may cause non-response bias, which means the real feeling and thinking of a specific event will be misunderstood. For example, the article analysis of health problem with non-response bias pointed out that non-response was determined to contribute to underestimated health risks. The strength of the data set I used in the paper is that it set the minimum response rate for each application, which may prevent non-response bias to some extent.[@Cite_bias]
+The main goal of creating the dataset is to analyze the poll engagement in Toronto. The dataset is free to the public and starts on April 1, 2015.  The methodology of collecting data is that when the City Clerk's Office receives an application, a poll will distribute to all the people who may be influenced in the region mentioned in the application. People have the right to participate in the poll or not. The number of people who refuse to reply or fail delivered and any other information will be recorded in the dataset. More detail is in the raw dataset in the input folder. Only the application which meets the required response rate will be processed to the next step. The data will be updated after the polls have been closed and after the certification has been made. As we mentioned before, non-response bias will cause the result to be overestimated or underestimated, and the result will be unreliable. [@Cite_bias] In order to avoid the non-response bias, the government set a required response rate for each application. Although the problem of non-response bias being prevents to some extent, the dataset has some limitations. First, the data collected only six applications, which is not representative of the situation of poll engagement in Toronto. Meanwhile, the required response rate for each application is different, which may cause the result to is inaccurate. 
 
 The data set after cleaning contains 6 variables with 922 conversations and no missing values. The explanations of each variable will be shown in the following:\
-. Application_topic: Type of each application, which is a categorical variable with levels of "Front Yard Parking", "Traffic Calming," "Boulevard Cafe", "Business Improvement Area," and "Commercial Boulevard Parking."\
-. Response_rate_met: Whether the number of ballots returned has met the required response rate, a categorical variable with values 'YES' and 'NO.'\
-. Real_total_number: The number of total voters on the final poll list, which is a numerical variable.\
-. Potential_total_number: The number of people residing within the poll boundary range, which is a numerical variable.\
-. Date: The date of close, a time categorical variable from June 5, 2015, to Dec 30, 2020.\
-. Final_result: The final result of the poll, which is a categorical variable with levels of "In favour', ' opposed,' and ' response rate not met.'\
+*  `Application_topic`: Type of each application, which is a categorical variable with levels of "Front Yard Parking", "Traffic Calming," "Boulevard Cafe", "Business Improvement Area," and "Commercial Boulevard Parking."\
+* `Response_rate_met`: Whether the number of ballots returned has met the required response rate, a categorical variable with values 'YES' and 'NO.'\
+* `Real_total_number`: The number of total voters on the final poll list, which is a numerical variable.\
+* `Potential_total_number`: The number of people residing within the poll boundary range, which is a numerical variable.\
+* `Date`: The date of close, a time categorical variable from June 5, 2015, to Dec 30, 2020.\
+* `Final_result`: The final result of the poll, which is a categorical variable with levels of "In favour', ' opposed,' and ' response rate not met.'\
 
 ```{r,include=FALSE}
 #Create a new column, response_rate.
@@ -87,13 +82,15 @@ clean_data<-clean_data%>%
   mutate(Response_rate=round((Real_total_number/Potential_total_number),3))
 ```
 
-In order to analyze the real response rate for each application topic, I create a new variable, response_rate, based on the Real_total_number and Potential_total_number variables in the clean dataset.:
-. Response_rate: Real_total_number divided by Potential_total_number
+In order to analyze the real response rate for each application topic, I create a new variable, response_rate, based on the Real_total_number and Potential_total_number variables in the clean dataset.:\
+* `Response_rate`: Real_total_number divided by Potential_total_number
 
 
 
+# Results
+Table \@ref(tab:table1) shows the total number of applications for each topic from 2015 to 2020. We can see the number of applications about the problem with Front Yard Parking occupied half of the total application number, 510 in 922. We can deduce that most people have problems with the issue of front yard parking. 
 
-Table \@ref(tab:table1) shows the total number of application for each different topic, we can see that from year 2015 to 2020, the number of application about the problem with Front Yard Parking occupied half of the total application number, which is 510 in 922. We can deduce that most people have the problems about the issue of front yard parking. The Figure \@ref(fig:Figure1) illustrate a line chart shows the trend of the total application number from year 2015 to 2020 in each quarter. The line chart shows a downward slope, which means all topics the city organization cares about are gradually getting better because fewer and fewer application numbers are being received. This is a great sign for the city organization.
+Figure \@ref(fig:Figure1) illustrates a line chart that shows the trend of the total application number from the year 2015 to 2020 in each quarter. The line chart shows an obvious downward slope, which means the situation of all topics the city government cares about is gradually getting better because fewer and fewer application numbers are being received. This is a great sign for the city government.
 
 ```{r table1,echo=FALSE}
 #Create a table only show the type of topic and the total number of application per topic
@@ -132,9 +129,8 @@ tmp_data<-clean_data%>%
          Date_year=format(as.Date(Date),"%Y"))                  #only includes the value of the year
 ```
 
-The time range for the data in the dataset is from 2015 to 2020 last day. To know how people's attitudes towards the public polls, I draw a line chart to show the response rate trend, how many people actually engaged in the City's polls. Because according to each application, there will be a list of people selected to participate in the public polls, however, some people will refuse to participate. I want to indirectly understand people's attitudes towards the public polls by knowing the response rate.
+The time range for the data is from 2015 to 2020 last day. To know engagement about public polls, a line chart is drawn to show the response rate trend. The line graph, Figure \@ref(fig:Figure2) , shows that the response rate generally fluctuated around 0.8 from 2015 to April 2020. The relatively high engagement rate illustrates that people actively participate in the City's public polls in the past six years. The line sharply declined in April 2020 from 0.88 to 0.5 in October and bounced back to normal in November. As we all known, the covid-19 broke out in March in Toronto, which may be the reason influence the engagement sharply decline in April, and because the response rate quickly returned to normal levels in November. From this, it can be inferred that the drastic decline was not due to changes in people’s attitudes towards polls, but more data is needed to support this conjecture. However, the poll reply from the resident during the decline period may experience non-response bias due to the low engagement rate.
 
-The line chart Figure \@ref(fig: Figure2) shows that the response rate generally fluctuated around 0.8 from 2015 to April 2020. The relatively high engagement rate illustrates that people actively participate in the City's public polls in the past six years. The line sharply declined in April 2020 from 0.88 to 0.5 in October and bounced back to normal in November. As we all known, the covid-19 broke out in March in Toronto, which may be the reason influence the engagement sharply decline in April, and because the response rate quickly returned to normal levels in November. From this, it can be inferred that the drastic decline was not due to changes in people’s attitudes towards polls, but more data is needed to support this conjecture.
 
 ```{r Figure2,fig.cap="Average response rate per month",echo=FALSE,warning=FALSE,fig.height = 3, fig.width = 8}
 # Draw the a line chart to show the trend of average response rate each month.
@@ -147,9 +143,9 @@ ggplot(data = tmp_data, aes(x = Date_month, y = Response_rate)) +
 
 ```
 
-To know more about data, the graphs about different topics with whether the required response rate has been met or not, and with the final result situation for each topic been analyzed. From the left graph in Figure \@ref(fig: Figure3), Traffic Calming has the highest number of applications that do not meet the required response rate among all types, which is around half of the total applications in Traffic Calming topic. Meanwhile, Front Yard Parking has the highest application number that meets the required response rate, which is around 95% of the total applications on the topic of Front Yard Parking.
+In order to know more about data, the graphs about different topics with whether the required response rate has been met or not, and with the final result situation for each topic been analyzed. From the left graph in Figure \@ref(fig:Figure3) , Traffic Calming has the highest number of applications that do not meet the required response rate among all topics, which is around half of the total applications in Traffic Calming topic. Meanwhile, Front Yard Parking has the highest application number that meets the required response rate.
 
-The applications which do not meet the required response rate will be given the final result of "No", then, the graph about the final result for the applications which meet the required response rate has been plotted on the left in Figure \@ref(fig: Figure3). The graph illustrates that Front Yard Parking has the highest pass rate by showing the highest proportion of result of "in favour," then, followed by Traffic Calming. Combined the information we explored out in Table \@ref(tab:table1), which shows that almost half of the applications are about Front Yard Parking, we can infer that although most people have problems with front yard parking, it is the easiest to pass topic.
+The applications which do not meet the required response rate will be given the final result of "No", then, the graph about the final result for the applications which meet the required response rate has been plotted on the right in Figure \@ref(fig:Figure3) . The graph illustrates that Front Yard Parking has the highest pass rate by showing the highest proportion of result of "in favour," then, followed by Traffic Calming. Combined the information we explored out in Table \@ref(tab:table1), which shows that almost half of the applications are about Front Yard Parking, we can infer that although most people have problems with front yard parking, it is the easiest to pass topic.
 
 
 
@@ -177,10 +173,23 @@ ggarrange(p1, p2, ncol = 2, nrow = 1)
 
 ```
 
-While the poll engagement behaves great in Toronto, shown by the paper's result. However, the result is not representative due to the limitations of the dataset using for analysis. The first point is that the application volume for each topic is not close to equal. For instance, almost half of the application is about front yard parking, which may cause the result unreliable. Also, the date of collecting data is inconsistent, which may hide the information behind. Finally, the required response rate for each application is different, which will influence the analysis. The information about how to generate the required response rate should be explained.
 
+Figure \@ref(fig:Figure4)  shows an obvious reduction trend for the total number of applications for the front yard parking. After combing all the information we gain through the descriptive analysis, we can conclude that the government earnestly understands the problems of residents and agrees with feelings from residents, and is actively helping residents to solve their problems.
 
-加一个front yard parking 的line chart， 显示出，政府有关心人们的问题并且同意人民的感受。无论从整体来看还是分支。。。。。。。
+Firstly, through figure 1, we conclude that residents have fewer problems with the city by displaying a declining trend with the total application number. Then, although table 1 shows that most people are unpleased with the policy of front yard parking, figure 3 illustrates that the application of front yard parking has the highest opportunity to get approved by the government. Figure 4 shows a reducing trend for the total application number of front yard parking through time.
+
+```{r Figure4,fig.cap="Total number of Front Yard Parking application in each quarter",echo=FALSE,fig.height = 3, fig.width = 8}
+
+#Create a temperate table to sort the data only for Front Yard Parking
+tmp2<-clean_data%>%
+  filter(Application_topic=="Front Yard Parking")
+
+# Plotting the line chart to show the trend of total number of application.
+  ggplot(tmp2, aes(x=Date_quarter)) + 
+  stat_count(geom='line', aes(y=..count..),size=1,color='red')+
+  ylab("Number of application")
+```
+
 
 
 
