@@ -1,9 +1,9 @@
 ---
-title: High Poll Engagement but sharply Declined in April 2020
+title: Front Yard Parking is the Major Concern for Residents from 2015 to 2020
 author: "Hong Pan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 
-abstract: The data used in the paper was collected by the city government used for analyzed the poll engagement. Attitudes from residents toward each topic and the changes of response rate through time being discussed. The descriptive results illustrate that Front Yard Parking has the most issues, and the poll engagement performed poorly in April 2020. Non-response bias may exist with low engagement, which may cause misunderstanding for the government.
+abstract: The data used in the paper was collected by the city government used for analyzed the poll engagement. Attitudes from residents toward each topic and the changes of response rate over time being discussed. The descriptive results illustrate that Front Yard Parking has the most issues, and the poll engagement performed poorly in April 2020. Non-response bias may exist with low engagement, which may cause misunderstanding for the government.
 thanks: 'Code and data are available at: https://github.com/HongTrista/folder.'
 bibliography: references.bib
 
@@ -66,7 +66,9 @@ clean_data<-read_csv(url("https://raw.githubusercontent.com/HongTrista/folder/ma
 ```
 The analysis for this paper done using R [@Cite_R]and several packages, which listed as followed: 'ggplot2' helps to visualize the data in figures[@Cite_ggplot2], 'tidyverse' used for data manipulation[@Cite_tidyverse], 'readr' used for import data set from URL by R[@Cite_readr], 'bookdown' used for cross-referencing figures and tables[@Cite_bookdown],'ggpubr' used for combining graphs in one figure [@Cite_ggpubr], and 'zoo' used to edit the time variable.[@Cite_zoo]  The data set, Polls Conducted by the City, I used for analysis in the paper is from the City of Toronto Open Data Portal.[@Dataset] 
 
-The main goal of creating the dataset is to analyze the poll engagement in Toronto. The dataset is free to the public and starts on April 1, 2015.  The methodology of collecting data is that when the City Clerk's Office receives an application, a poll will distribute to all the people who may be influenced in the region mentioned in the application. People have the right to participate in the poll or not. The number of people who refuse to reply or fail delivered and any other information will be recorded in the dataset. More detail is in the raw dataset in the input folder. Only the application which meets the required response rate will be processed to the next step. The data will be updated after the polls have been closed and after the certification has been made. As we mentioned before, non-response bias will cause the result to be overestimated or underestimated, and the result will be unreliable. [@Cite_bias] In order to avoid the non-response bias, the government set a required response rate for each application. Although the problem of non-response bias being prevents to some extent, the dataset has some limitations. First, the data collected only six applications, which is not representative of the situation of poll engagement in Toronto. Meanwhile, the required response rate for each application is different, which may cause the result to is inaccurate. 
+The main goal of creating the dataset is to analyze the poll engagement in Toronto. The dataset is free to the public and starts on April 1, 2015.  The methodology of collecting data is that when the City Clerk's Office receives an application, a poll will distribute to all the people who may be influenced in the region mentioned in the application. People have the right to participate in the poll or not. The number of people who refuse to reply or fail delivered and any other information will be recorded in the dataset. More detail is in the raw dataset in the input folder. Only the application which meets the required response rate will be processed to the next step. The data will be updated after the polls have been closed and after the certification has been made. 
+
+As we mentioned before, non-response bias will cause the result to be overestimated or underestimated, and the result will be unreliable. [@Cite_bias] In order to avoid the non-response bias, the government set a required response rate for each application. Although the problem of non-response bias being prevents to some extent, the dataset has some limitations. First, the data collected only six aspects of applications, which is not representative of the situation of poll engagement in Toronto. Meanwhile, the required response rate for each application is different, which may cause the result to is inaccurate and incomparable. 
 
 The data set after cleaning contains 6 variables with 922 conversations and no missing values. The explanations of each variable will be shown in the following:\
 *  `Application_topic`: Type of each application, which is a categorical variable with levels of "Front Yard Parking", "Traffic Calming," "Boulevard Cafe", "Business Improvement Area," and "Commercial Boulevard Parking."\
@@ -174,7 +176,7 @@ ggarrange(p1, p2, ncol = 2, nrow = 1)
 ```
 
 
-Figure \@ref(fig:Figure4)  shows an obvious reduction trend for the total number of applications for the front yard parking. After combing all the information we gain through the descriptive analysis, we can conclude that the government earnestly understands the problems of residents and agrees with feelings from residents, and is actively helping residents to solve their problems.
+Figure \@ref(fig:Figure4) shows an obvious reduction trend for the total number of applications for the front yard parking. After combing all the information we gain through the descriptive analysis, we can conclude that the government earnestly understands the problems of residents and agrees with feelings from residents, and is actively helping residents to solve their problems.
 
 Firstly, through figure 1, we conclude that residents have fewer problems with the city by displaying a declining trend with the total application number. Then, although table 1 shows that most people are unpleased with the policy of front yard parking, figure 3 illustrates that the application of front yard parking has the highest opportunity to get approved by the government. Figure 4 shows a reducing trend for the total application number of front yard parking through time.
 
@@ -191,11 +193,13 @@ tmp2<-clean_data%>%
 ```
 
 
-
-
-
-
 # References
+
+
+
+
+
+
 
 
 
